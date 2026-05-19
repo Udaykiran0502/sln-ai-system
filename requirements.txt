@@ -1,0 +1,15 @@
+langgraph
+langchain
+openai
+anthropic
+google-generativeai
+pillow
+uharfbuzz
+opencv-python
+rembg
+numpy
+pandas
+python-dotenv
+fastapi
+uvicorn
+sqlalchemy

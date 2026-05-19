@@ -1,0 +1,24 @@
+[
+  {
+    "template_id": "pol_ban_001_tel",
+    "category": "political",
+    "style": "bold_traditional",
+    "colors": {
+      "primary": "#FF9933",
+      "secondary": "#FFFFFF",
+      "accent": "#008000",
+      "text": "#000000"
+    },
+    "fonts": {
+      "heading": "Ramabhadra",
+      "body": "Gautami"
+    },
+    "safe_zones": {
+      "top": "5%",
+      "bottom": "5%",
+      "left": "5%",
+      "right": "5%"
+    },
+    "psd_path": "assets/templates/psd/pol_ban_001_tel.psd"
+  }
+]
