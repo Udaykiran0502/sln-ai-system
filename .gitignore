@@ -1,0 +1,49 @@
+# ── System Environment Secrets ──
+.env
+.env.local
+.env.*.local
+*.secret
+*.pat
+token.txt
+
+# ── Python Environment ──
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.agent/
+.agent*
+
+# ── Node.js / React ──
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── SLN AI Outputs & Database (Sandboxed / Local only) ──
+outputs/previews/
+outputs/final/
+outputs/.layer_cache/
+data/db/*.db
+data/orders/
+data/logs/
+data/chromadb/
+.tempmediaStorage/
+
+# ── IDEs & Operating Systems ──
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db

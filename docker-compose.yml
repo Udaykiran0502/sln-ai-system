@@ -1,0 +1,106 @@
+version: "3.8"
+
+services:
+  # ── Relational Database: PostgreSQL ──
+  postgres:
+    image: postgres:15-alpine
+    container_name: sln_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sln_admin
+      POSTGRES_PASSWORD: sln_password
+      POSTGRES_DB: sln_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sln_admin -d sln_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Message Broker & Cache Sync: Redis ──
+  redis:
+    image: redis:7-alpine
+    container_name: sln_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Vector Database: ChromaDB ──
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: sln_chromadb
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/data
+    volumes:
+      - chroma_data:/chroma/data
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend Engine ──
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: sln_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - DATABASE_URL=postgresql://sln_admin:sln_password@postgres:5432/sln_db
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_SERVER_HOST=chromadb
+      - CHROMA_SERVER_PORT=8000
+      - APP_ENV=production
+      - APP_DEBUG=false
+    volumes:
+      - ./assets:/app/assets
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+
+  # ── Vite React Frontend Editor ──
+  frontend:
+    build:
+      context: ./frontend_react
+      dockerfile: Dockerfile
+    container_name: sln_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  chroma_data:
+    driver: local

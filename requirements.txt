@@ -1,15 +1,55 @@
+# ─────────────────────────────────────────────────────
+# SLN Design Engine v3 — Python Dependencies
+# Install: pip install -r requirements.txt
+# ─────────────────────────────────────────────────────
+
+# ── AI / LLM ──
 langgraph
 langchain
-openai
-anthropic
+langchain-core
+langchain-google-genai
 google-generativeai
+
+# ── RAG / Design Memory ──
+chromadb
+sentence-transformers
+
+
+# ── Image Processing ──
 pillow
-uharfbuzz
 opencv-python
 rembg
 numpy
+
+# ── Text Rendering ──
+uharfbuzz
+freetype-py
+cairosvg
+
+# ── Indic Language Processing ──
+# Using ai4bharat indictrans2 (or huggingface wrappers)
+transformers
+sentencepiece
+accelerate
+sacremoses
+
+
+# ── Data ──
 pandas
+pydantic
+pydantic-settings
 python-dotenv
-fastapi
-uvicorn
+aiosqlite
 sqlalchemy
+
+# ── Web Backend ──
+fastapi
+uvicorn[standard]
+httpx
+
+# ── Export ──
+reportlab
+
+# ── Testing ──
+pytest
+pytest-asyncio

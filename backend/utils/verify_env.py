@@ -4,7 +4,8 @@ def verify_imports():
     packages = [
         "langgraph", "langchain", "openai", "anthropic", "google.generativeai",
         "PIL", "uharfbuzz", "cv2", "rembg", "numpy", "pandas",
-        "dotenv", "fastapi", "uvicorn", "sqlalchemy"
+        "dotenv", "fastapi", "uvicorn", "sqlalchemy",
+        "chromadb", "sentence_transformers", "cairosvg"
     ]
     
     missing = []
@@ -57,12 +58,39 @@ def test_uharfbuzz_telugu():
         print(f"❌ HarfBuzz test failed: {e}")
         return False
 
+def test_libraqm():
+    try:
+        from PIL import features
+        has_raqm = features.check('raqm')
+        if has_raqm:
+            print("✅ Pillow libraqm support is enabled (required for HarfBuzz text rendering).")
+            return True
+        else:
+            print("❌ Pillow libraqm support is missing. Complex text shaping will fail.")
+            print("   Try: pip install --force-reinstall Pillow")
+            return False
+    except ImportError:
+        print("❌ Could not check Pillow features.")
+        return False
+
+def test_cairosvg():
+    try:
+        import cairosvg
+        print("✅ CairoSVG is installed and available.")
+        return True
+    except Exception as e:
+        print(f"⚠️ CairoSVG test failed: {e}")
+        print("   Fallback: System will use Pillow for text rendering (lower quality).")
+        return True # Non-fatal
+
 if __name__ == "__main__":
     print("Starting environment verification...")
     imports_ok = verify_imports()
     hb_ok = test_uharfbuzz_telugu()
+    raqm_ok = test_libraqm()
+    cairo_ok = test_cairosvg()
     
-    if imports_ok and hb_ok:
+    if imports_ok and hb_ok and raqm_ok:
         print("\n✅ All tests passed. Environment is ready.")
         sys.exit(0)
     else:

@@ -2,23 +2,146 @@
   {
     "template_id": "pol_ban_001_tel",
     "category": "political",
+    "subcategory": "election_campaign",
     "style": "bold_traditional",
+    "layout_type": "hero_left_text_right",
     "colors": {
       "primary": "#FF9933",
       "secondary": "#FFFFFF",
       "accent": "#008000",
-      "text": "#000000"
+      "text": "#000000",
+      "background": "#FFF5E6"
     },
     "fonts": {
-      "heading": "Ramabhadra",
-      "body": "Gautami"
+      "heading": {"family": "Ramabhadra", "weight": "Regular", "max_size_pt": 120},
+      "body": {"family": "NTR", "weight": "Regular", "max_size_pt": 48}
     },
-    "safe_zones": {
-      "top": "5%",
-      "bottom": "5%",
-      "left": "5%",
-      "right": "5%"
+    "safe_zones": {"top": 5, "bottom": 5, "left": 5, "right": 5},
+    "layout_regions": {
+      "hero_image": {"x": 0, "y": 0, "w": 40, "h": 100},
+      "heading": {"x": 42, "y": 10, "w": 55, "h": 25},
+      "body": {"x": 42, "y": 38, "w": 55, "h": 35},
+      "footer": {"x": 0, "y": 85, "w": 100, "h": 15}
     },
-    "psd_path": "assets/templates/psd/pol_ban_001_tel.psd"
+    "background_path": "",
+    "success_score": 0.85,
+    "usage_count": 47,
+    "tags": ["saffron", "tricolor", "traditional", "telugu", "energetic"]
+  },
+  {
+    "template_id": "pol_ban_002_tel",
+    "category": "political",
+    "subcategory": "party_event",
+    "style": "modern_bold",
+    "layout_type": "split",
+    "colors": {
+      "primary": "#1E40AF",
+      "secondary": "#DBEAFE",
+      "accent": "#F59E0B",
+      "text": "#FFFFFF",
+      "background": "#1E3A5F"
+    },
+    "fonts": {
+      "heading": {"family": "Ramabhadra", "weight": "Regular", "max_size_pt": 110},
+      "body": {"family": "NTR", "weight": "Regular", "max_size_pt": 44}
+    },
+    "safe_zones": {"top": 5, "bottom": 5, "left": 5, "right": 5},
+    "layout_regions": {
+      "hero_image": {"x": 0, "y": 0, "w": 50, "h": 100},
+      "heading": {"x": 52, "y": 10, "w": 45, "h": 25},
+      "body": {"x": 52, "y": 38, "w": 45, "h": 35},
+      "footer": {"x": 52, "y": 78, "w": 45, "h": 18}
+    },
+    "background_path": "",
+    "success_score": 0.78,
+    "usage_count": 23,
+    "tags": ["blue", "modern", "bold", "telugu", "formal"]
+  },
+  {
+    "template_id": "wed_ban_001_tel",
+    "category": "wedding",
+    "subcategory": "wedding_invitation",
+    "style": "elegant_traditional",
+    "layout_type": "centered_stack",
+    "colors": {
+      "primary": "#8B0000",
+      "secondary": "#FFD700",
+      "accent": "#FFF8DC",
+      "text": "#4A0404",
+      "background": "#FFF5E6"
+    },
+    "fonts": {
+      "heading": {"family": "Ramabhadra", "weight": "Regular", "max_size_pt": 100},
+      "body": {"family": "NTR", "weight": "Regular", "max_size_pt": 42}
+    },
+    "safe_zones": {"top": 6, "bottom": 6, "left": 6, "right": 6},
+    "layout_regions": {
+      "heading": {"x": 10, "y": 5, "w": 80, "h": 18},
+      "hero_image": {"x": 25, "y": 25, "w": 50, "h": 35},
+      "body": {"x": 10, "y": 62, "w": 80, "h": 22},
+      "footer": {"x": 5, "y": 88, "w": 90, "h": 10}
+    },
+    "background_path": "",
+    "success_score": 0.90,
+    "usage_count": 62,
+    "tags": ["maroon", "gold", "traditional", "telugu", "celebratory", "ornate"]
+  },
+  {
+    "template_id": "bus_flex_001_tel",
+    "category": "business",
+    "subcategory": "grand_opening",
+    "style": "corporate_modern",
+    "layout_type": "hero_left_text_right",
+    "colors": {
+      "primary": "#1E3A5F",
+      "secondary": "#FFFFFF",
+      "accent": "#00ACC1",
+      "text": "#1E3A5F",
+      "background": "#F0F9FF"
+    },
+    "fonts": {
+      "heading": {"family": "Oswald", "weight": "Bold", "max_size_pt": 100},
+      "body": {"family": "Roboto", "weight": "Regular", "max_size_pt": 40}
+    },
+    "safe_zones": {"top": 5, "bottom": 5, "left": 5, "right": 5},
+    "layout_regions": {
+      "hero_image": {"x": 0, "y": 0, "w": 40, "h": 85},
+      "heading": {"x": 42, "y": 10, "w": 55, "h": 22},
+      "body": {"x": 42, "y": 35, "w": 55, "h": 30},
+      "footer": {"x": 0, "y": 85, "w": 100, "h": 15}
+    },
+    "background_path": "",
+    "success_score": 0.82,
+    "usage_count": 35,
+    "tags": ["blue", "corporate", "modern", "minimal", "formal"]
+  },
+  {
+    "template_id": "rel_pos_001_tel",
+    "category": "religious",
+    "subcategory": "temple_festival",
+    "style": "devotional_ornate",
+    "layout_type": "centered_stack",
+    "colors": {
+      "primary": "#B22222",
+      "secondary": "#FFD700",
+      "accent": "#8B4513",
+      "text": "#4A0000",
+      "background": "#FFF8DC"
+    },
+    "fonts": {
+      "heading": {"family": "Ramabhadra", "weight": "Regular", "max_size_pt": 110},
+      "body": {"family": "NTR", "weight": "Regular", "max_size_pt": 44}
+    },
+    "safe_zones": {"top": 6, "bottom": 6, "left": 6, "right": 6},
+    "layout_regions": {
+      "heading": {"x": 10, "y": 5, "w": 80, "h": 20},
+      "hero_image": {"x": 20, "y": 27, "w": 60, "h": 38},
+      "body": {"x": 10, "y": 67, "w": 80, "h": 18},
+      "footer": {"x": 5, "y": 87, "w": 90, "h": 11}
+    },
+    "background_path": "",
+    "success_score": 0.88,
+    "usage_count": 41,
+    "tags": ["red", "gold", "traditional", "telugu", "devotional", "ornate"]
   }
 ]
