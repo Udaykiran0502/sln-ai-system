@@ -10,6 +10,7 @@ export const Canvas: React.FC = () => {
   const updateNode = useStore((state) => state.updateNode);
   const zoom = useStore((state) => state.zoom);
   const setZoom = useStore((state) => state.setZoom);
+  const qaViolations = useStore((state) => state.qaViolations);
 
   const transformerRef = useRef<any>(null);
   const stageRef = useRef<any>(null);
@@ -30,7 +31,7 @@ export const Canvas: React.FC = () => {
 
   const handleStageMouseDown = (e: any) => {
     // deselect when clicking on empty stage background
-    if (e.target === e.target.getStage() || e.target.id() === 'bg-rect') {
+    if (e.target === e.target.getStage() || e.target.id() === 'bg-rect' || e.target.id() === 'bg-political' || e.target.id() === 'bg-retail' || e.target.id() === 'bg-wedding') {
       setSelectedNodeId(null);
       return;
     }
@@ -107,6 +108,12 @@ export const Canvas: React.FC = () => {
             {project.sceneGraph
               .filter((node) => node.visible)
               .map((node) => {
+                // Check if this node has active QA violations
+                const hasViolation = qaViolations.some(v => v.nodeId === node.id);
+                const isCritical = qaViolations.some(v => v.nodeId === node.id && v.severity === 'critical');
+                const outlineStroke = hasViolation ? (isCritical ? '#f43f5e' : '#fbbf24') : undefined;
+                const outlineWidth = hasViolation ? 1.5 : 0;
+
                 if (node.type === 'shape' && node.style.shapeType === 'rect') {
                   return (
                     <Rect
@@ -117,8 +124,9 @@ export const Canvas: React.FC = () => {
                       width={node.width}
                       height={node.height}
                       fill={node.style.fill}
-                      stroke={node.style.stroke}
-                      strokeWidth={node.style.strokeWidth}
+                      stroke={outlineStroke || node.style.stroke}
+                      strokeWidth={outlineWidth || node.style.strokeWidth}
+                      dash={hasViolation ? [4, 4] : undefined}
                       draggable={!node.locked}
                       onClick={() => setSelectedNodeId(node.id)}
                       onDragEnd={(e) => {
@@ -130,30 +138,57 @@ export const Canvas: React.FC = () => {
                 
                 if (node.type === 'text') {
                   return (
-                    <Text
-                      key={node.id}
-                      id={node.id}
-                      x={node.x}
-                      y={node.y}
-                      width={node.width}
-                      height={node.height}
-                      text={node.style.text}
-                      fontSize={node.style.fontSize}
-                      fontFamily={node.style.fontFamily}
-                      fill={node.style.fill}
-                      align={node.style.align}
-                      draggable={!node.locked}
-                      onClick={() => setSelectedNodeId(node.id)}
-                      onDragEnd={(e) => {
-                        updateNode(node.id, { x: e.target.x(), y: e.target.y() });
-                      }}
-                      onTransformEnd={handleTransformEnd}
-                    />
+                    <React.Fragment key={node.id}>
+                      <Text
+                        id={node.id}
+                        x={node.x}
+                        y={node.y}
+                        width={node.width}
+                        height={node.height}
+                        text={node.style.text}
+                        fontSize={node.style.fontSize}
+                        fontFamily={node.style.fontFamily}
+                        fill={node.style.fill}
+                        align={node.style.align}
+                        draggable={!node.locked}
+                        onClick={() => setSelectedNodeId(node.id)}
+                        onDragEnd={(e) => {
+                          updateNode(node.id, { x: e.target.x(), y: e.target.y() });
+                        }}
+                        onTransformEnd={handleTransformEnd}
+                      />
+                      {/* Visual QA dashed warning box overlay around active texts */}
+                      {hasViolation && (
+                        <Rect
+                          x={node.x}
+                          y={node.y}
+                          width={node.width}
+                          height={node.height}
+                          stroke={outlineStroke}
+                          strokeWidth={outlineWidth}
+                          dash={[4, 4]}
+                          listening={false}
+                        />
+                      )}
+                    </React.Fragment>
                   );
                 }
 
                 return null;
               })}
+
+            {/* Bleed Safety Guide Overlay Cut Line (Dashed red line) */}
+            <Rect
+              x={20}
+              y={20}
+              width={project.width - 40}
+              height={project.height - 40}
+              stroke="#b91c1c"
+              strokeWidth={1}
+              dash={[6, 4]}
+              listening={false}
+              opacity={0.65}
+            />
 
             {/* Selection Transform Node Overlay */}
             <Transformer
