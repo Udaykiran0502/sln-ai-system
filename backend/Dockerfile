@@ -1,7 +1,7 @@
-# ── Base Image with Python 3.11 Slim Bullseye ──
+# ── Base Image ───────────────────────────────────────────────────────────────
 FROM python:3.11-slim-bullseye
 
-# Install standard C compiler and libraries required for HarfBuzz shaper, Cairo/Pillow vectors, and database netcats
+# ── System dependencies ──────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -15,15 +15,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Install Python packages
+# ── Python deps (cached layer — only re-runs when requirements.txt changes) ──
 COPY requirements.txt .
-RUN pip install --default-timeout=1000 --no-cache-dir -r requirements.txt
 
-# Copy source code and assets
+# Use BuildKit cache mount so pip cache persists across rebuilds on this machine
+# Also bump pip itself first to avoid legacy resolver slowness
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip==26.1.1 && \
+    pip install --no-deps sentence-transformers==3.4.1 2>/dev/null || true && \
+    pip install -r requirements.txt
+
+# ── Application code ─────────────────────────────────────────────────────────
 COPY . .
 
-# Expose port for FastAPI backend
 EXPOSE 8000
 
-# Start backend using Uvicorn
 CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]

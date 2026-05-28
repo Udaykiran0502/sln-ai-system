@@ -1,5 +1,11 @@
 version: "3.8"
 
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   # ── Relational Database: PostgreSQL ──
   postgres:
@@ -41,7 +47,7 @@ services:
     container_name: sln_chromadb
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"  # host:8001 → container:8000 (avoids conflict with backend)
     environment:
       - IS_PERSISTENT=TRUE
       - PERSIST_DIRECTORY=/chroma/data
@@ -67,7 +73,7 @@ services:
       - DATABASE_URL=postgresql://sln_admin:sln_password@postgres:5432/sln_db
       - REDIS_URL=redis://redis:6379/0
       - CHROMA_SERVER_HOST=chromadb
-      - CHROMA_SERVER_PORT=8000
+      - CHROMA_SERVER_PORT=8000  # internal container-to-container port (correct)
       - APP_ENV=production
       - APP_DEBUG=false
     volumes:
@@ -91,7 +97,7 @@ services:
     container_name: sln_frontend
     restart: always
     ports:
-      - "5173:5173"
+      - "3000:5173"  # host:3000 → container:5173 (Vite dev server)
     environment:
       - VITE_API_BASE_URL=http://localhost:8000
     depends_on:

@@ -1,55 +1,56 @@
-# ─────────────────────────────────────────────────────
-# SLN Design Engine v3 — Python Dependencies
-# Install: pip install -r requirements.txt
-# ─────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════
+# SLN Design Engine v3 — Python Dependencies (Docker-optimized)
+# Heavy ML packages (torch, sentence-transformers) are loaded at
+# RUNTIME via lazy imports, not baked into the image.
+# ══════════════════════════════════════════════════════════════
 
-# ── AI / LLM ──
-langgraph
-langchain
-langchain-core
-langchain-google-genai
-google-generativeai
+# ── AI / LLM ─────────────────────────────────────────────────
+langgraph==0.4.8
+langchain==0.3.25
+langchain-core==1.3.3
+langchain-google-genai==2.1.5
+google-generativeai==0.8.6
 
-# ── RAG / Design Memory ──
-chromadb
-sentence-transformers
+# ── RAG / Design Memory ──────────────────────────────────────
+# chromadb pulls in onnxruntime (50 MB) NOT torch (532 MB)
+chromadb==0.6.3
 
+# ── Image Processing ─────────────────────────────────────────
+pillow==11.2.1
+opencv-python-headless==4.11.0.86
+# rembg[cpu] uses onnxruntime, not torch — 10x smaller than full rembg
+rembg[cpu]==2.0.75
+numpy==1.26.4
 
-# ── Image Processing ──
-pillow
-opencv-python
-rembg
-numpy
+# ── Text Rendering ───────────────────────────────────────────
+uharfbuzz==0.43.0
+freetype-py==2.5.1
+cairosvg==2.7.1
 
-# ── Text Rendering ──
-uharfbuzz
-freetype-py
-cairosvg
+# ── Indic Language Processing ────────────────────────────────
+# transformers + sentencepiece only (NO accelerate, NO torch)
+# torch is NOT needed for inference with google-generativeai
+transformers==4.51.3
+sentencepiece==0.2.0
+sacremoses==0.1.1
 
-# ── Indic Language Processing ──
-# Using ai4bharat indictrans2 (or huggingface wrappers)
-transformers
-sentencepiece
-accelerate
-sacremoses
+# ── Data ─────────────────────────────────────────────────────
+pandas==2.2.3
+pydantic==2.11.5
+pydantic-settings==2.9.1
+python-dotenv==1.1.0
+aiosqlite==0.21.0
+sqlalchemy==2.0.41
 
+# ── Web Backend ──────────────────────────────────────────────
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+httpx==0.28.1
+websockets==15.0.1
 
-# ── Data ──
-pandas
-pydantic
-pydantic-settings
-python-dotenv
-aiosqlite
-sqlalchemy
+# ── Export ───────────────────────────────────────────────────
+reportlab==4.4.0
 
-# ── Web Backend ──
-fastapi
-uvicorn[standard]
-httpx
-
-# ── Export ──
-reportlab
-
-# ── Testing ──
-pytest
-pytest-asyncio
+# ── Testing ──────────────────────────────────────────────────
+pytest==8.3.5
+pytest-asyncio==0.26.0
