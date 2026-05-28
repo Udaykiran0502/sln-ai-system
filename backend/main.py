@@ -3,6 +3,7 @@ SLN AI System — Backend API Server
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1.endpoints.websocket import router as ws_router
 
 app = FastAPI(
     title="SLN AI System API",
@@ -21,6 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount WebSockets and REST endpoints
+app.include_router(ws_router)
+
 
 @app.get("/")
 async def root():
@@ -34,3 +38,4 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
