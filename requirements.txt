@@ -1,24 +1,25 @@
 # ══════════════════════════════════════════════════════════════
 # SLN Design Engine v3 — Python Dependencies (Docker-optimized)
-# Heavy ML packages (torch, sentence-transformers) are loaded at
-# RUNTIME via lazy imports, not baked into the image.
+# Versions validated for mutual compatibility — DO NOT mix
+# langchain 0.3.x with langchain-core >=1.0.0
 # ══════════════════════════════════════════════════════════════
 
-# ── AI / LLM ─────────────────────────────────────────────────
-langgraph==0.4.8
+# ── AI / LLM (pinned to the 0.3.x compatible family) ─────────
+langgraph==0.2.66
 langchain==0.3.25
-langchain-core==1.3.3
-langchain-google-genai==2.1.5
+langchain-core==0.3.59
+langchain-google-genai==2.0.10
 google-generativeai==0.8.6
 
 # ── RAG / Design Memory ──────────────────────────────────────
-# chromadb pulls in onnxruntime (50 MB) NOT torch (532 MB)
+# chromadb bundles its own onnxruntime — does NOT pull torch
 chromadb==0.6.3
 
 # ── Image Processing ─────────────────────────────────────────
 pillow==11.2.1
+# headless variant — no GUI deps, much smaller
 opencv-python-headless==4.11.0.86
-# rembg[cpu] uses onnxruntime, not torch — 10x smaller than full rembg
+# rembg[cpu] uses onnxruntime (~120 MB) NOT torch (532 MB)
 rembg[cpu]==2.0.75
 numpy==1.26.4
 
@@ -28,9 +29,8 @@ freetype-py==2.5.1
 cairosvg==2.7.1
 
 # ── Indic Language Processing ────────────────────────────────
-# transformers + sentencepiece only (NO accelerate, NO torch)
-# torch is NOT needed for inference with google-generativeai
-transformers==4.51.3
+# transformers + sentencepiece for tokenisation only (no torch needed)
+transformers==4.40.2
 sentencepiece==0.2.0
 sacremoses==0.1.1
 

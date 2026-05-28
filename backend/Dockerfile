@@ -15,14 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# ── Python deps (cached layer — only re-runs when requirements.txt changes) ──
+# ── Python deps ──────────────────────────────────────────────────────────────
+# Cache mount: pip cache persists across rebuilds — no re-downloads after first build
 COPY requirements.txt .
-
-# Use BuildKit cache mount so pip cache persists across rebuilds on this machine
-# Also bump pip itself first to avoid legacy resolver slowness
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip==26.1.1 && \
-    pip install --no-deps sentence-transformers==3.4.1 2>/dev/null || true && \
+    pip install --upgrade pip && \
     pip install -r requirements.txt
 
 # ── Application code ─────────────────────────────────────────────────────────
