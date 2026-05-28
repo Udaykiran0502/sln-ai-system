@@ -1,0 +1,103 @@
+version: "3.9"
+
+services:
+  # ───────────────────────────────────
+  # Backend API Service
+  # ───────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: sln-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://sln:sln_password@postgres:5432/sln_db
+      - REDIS_URL=redis://redis:6379/0
+      - ENV=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../backend:/app
+    restart: unless-stopped
+
+  # ───────────────────────────────────
+  # Frontend Service
+  # ───────────────────────────────────
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    container_name: sln-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # ───────────────────────────────────
+  # PostgreSQL Database
+  # ───────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: sln-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sln
+      POSTGRES_PASSWORD: sln_password
+      POSTGRES_DB: sln_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sln"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ───────────────────────────────────
+  # Redis Cache
+  # ───────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: sln-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ───────────────────────────────────
+  # ChromaDB Vector Store
+  # ───────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: sln-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:
+
+networks:
+  default:
+    name: sln-network
