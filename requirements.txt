@@ -1,10 +1,12 @@
 # ══════════════════════════════════════════════════════════════
-# SLN Design Engine v3 — Python Dependencies (Docker-optimized)
-# Versions validated for mutual compatibility — DO NOT mix
-# langchain 0.3.x with langchain-core >=1.0.0
+# SLN Design Engine v3 — Python Dependencies
+#
+# PINNING STRATEGY:
+#   - langchain/* pinned tightly  → notorious cross-version breaks
+#   - Everything else unpinned    → let pip find a compatible set
 # ══════════════════════════════════════════════════════════════
 
-# ── AI / LLM (pinned to the 0.3.x compatible family) ─────────
+# ── AI / LLM (must all be from the same 0.3.x family) ────────
 langgraph==0.2.66
 langchain==0.3.25
 langchain-core==0.3.59
@@ -12,45 +14,40 @@ langchain-google-genai==2.0.10
 google-generativeai==0.8.6
 
 # ── RAG / Design Memory ──────────────────────────────────────
-# chromadb bundles its own onnxruntime — does NOT pull torch
-chromadb==0.6.3
+chromadb>=0.5.0
 
 # ── Image Processing ─────────────────────────────────────────
-pillow==11.2.1
-# headless variant — no GUI deps, much smaller
-opencv-python-headless==4.11.0.86
-# rembg[cpu] uses onnxruntime (~120 MB) NOT torch (532 MB)
-rembg[cpu]==2.0.75
-numpy==1.26.4
+pillow
+opencv-python-headless
+rembg[cpu]
 
 # ── Text Rendering ───────────────────────────────────────────
-uharfbuzz==0.43.0
-freetype-py==2.5.1
-cairosvg==2.7.1
+uharfbuzz
+freetype-py
+cairosvg
 
 # ── Indic Language Processing ────────────────────────────────
-# transformers + sentencepiece for tokenisation only (no torch needed)
-transformers==4.40.2
-sentencepiece==0.2.0
-sacremoses==0.1.1
+transformers>=4.40.0
+sentencepiece
+sacremoses
 
 # ── Data ─────────────────────────────────────────────────────
-pandas==2.2.3
-pydantic==2.11.5
-pydantic-settings==2.9.1
-python-dotenv==1.1.0
-aiosqlite==0.21.0
-sqlalchemy==2.0.41
+pandas
+pydantic>=2.0.0
+pydantic-settings
+python-dotenv
+aiosqlite
+sqlalchemy>=2.0.0
 
 # ── Web Backend ──────────────────────────────────────────────
-fastapi==0.115.12
-uvicorn[standard]==0.34.2
-httpx==0.28.1
-websockets==15.0.1
+fastapi>=0.110.0
+uvicorn[standard]
+httpx
+websockets
 
 # ── Export ───────────────────────────────────────────────────
-reportlab==4.4.0
+reportlab
 
 # ── Testing ──────────────────────────────────────────────────
-pytest==8.3.5
-pytest-asyncio==0.26.0
+pytest
+pytest-asyncio
