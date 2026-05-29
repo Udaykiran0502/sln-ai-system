@@ -209,6 +209,17 @@ class OrderStatus(BaseModel):
     qa_scores: Optional[dict] = None
     export_paths: Optional[dict] = None
     error: Optional[str] = None
+    client_name: Optional[str] = None
+    banner_type: Optional[str] = None
+    event_type: Optional[str] = None
+    dimensions: Optional[dict] = None
+    dpi: Optional[int] = None
+    language: Optional[str] = None
+    colors: Optional[dict] = None
+    text_content: Optional[dict] = None
+    phone_numbers: Optional[list[str]] = None
+    images: Optional[list[str]] = None
+    scene_graph: Optional[str] = None
 
 
 class ApiMessage(BaseModel):
@@ -372,6 +383,17 @@ async def get_order(order_id: str):
         qa_scores=state.get("qa_scores"),
         export_paths=state.get("export_paths"),
         error=state.get("error"),
+        client_name=state.get("client_name"),
+        banner_type=state.get("banner_type"),
+        event_type=state.get("event_type", ""),
+        dimensions=state.get("dimensions"),
+        dpi=state.get("dpi"),
+        language=state.get("language"),
+        colors=state.get("colors"),
+        text_content=state.get("text_content"),
+        phone_numbers=state.get("phone_numbers"),
+        images=state.get("images"),
+        scene_graph=state.get("scene_graph"),
     )
 
 

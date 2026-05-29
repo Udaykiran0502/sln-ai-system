@@ -440,6 +440,30 @@ const useDesignStore = create((set, get) => ({
     }
   },
 
+  // Save metadata patch to backend and re-trigger pipeline E2E
+  saveOrderMetadata: async (updates) => {
+    const { orderId } = get();
+    if (!orderId) return;
+
+    set({ pipelineStatus: 'processing' });
+    try {
+      const res = await patchOrder(orderId, {
+        ...updates,
+        is_geometry_only: false
+      });
+      if (res.data.status === 'completed' || res.data.status === 'composited' || res.data.status === 'queued') {
+        set({ pipelineStatus: 'completed' });
+        await get().loadOrder(orderId);
+      } else {
+        set({ pipelineStatus: res.data.status || 'failed' });
+      }
+    } catch (err) {
+      console.error('Failed to save order metadata:', err);
+      set({ pipelineStatus: 'failed' });
+      throw err;
+    }
+  },
+
   // Canvas viewport
   setZoom: (z) => set({ zoomLevel: Math.max(0.25, Math.min(3, z)) }),
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),

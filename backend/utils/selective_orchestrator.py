@@ -31,13 +31,22 @@ async def run_selective_pipeline(order_id: str, patch_data: dict) -> dict:
         new_scene_graph = patch_data.get("scene_graph")
         dirty_agents = []
         
+        metadata_changed = False
+        metadata_keys = ["client_name", "banner_type", "event_type", "dimensions", "dpi", "language", "colors", "text_content", "phone_numbers", "images"]
+        for key in metadata_keys:
+            if key in patch_data:
+                state[key] = patch_data[key]
+                metadata_changed = True
+        
         if new_scene_graph:
             state["scene_graph"] = new_scene_graph
             is_geom_only = patch_data.get("is_geometry_only", True)
-            if is_geom_only:
+            if is_geom_only and not metadata_changed:
                 dirty_agents = ["composition", "qa_engine"]
             else:
                 dirty_agents = ["font_intelligence", "layout_engine", "composition", "qa_engine"]
+        elif metadata_changed:
+            dirty_agents = ["font_intelligence", "layout_engine", "composition", "qa_engine"]
         else:
             dirty_agents = ["composition", "qa_engine"]
             
